@@ -2,6 +2,7 @@
 // PRE-ENTREGA 3: FUNCIONES E INTEGRACIÓN DE LÓGICA
 // ==========================================
 
+// 1. FUNCIONES DE PROCESAMIENTO Y CÁLCULO
 function calcularMultiplicador(tecnologia) {
   let tech = tecnologia.toLowerCase().trim();
   let multiplicador = 1;
@@ -27,13 +28,43 @@ function calcularMultiplicador(tecnologia) {
   }
   return multiplicador;
 }
-const calcularPuntosSesion = function(horas, multiplicador) {
-  return horas * multiplicador;
-};
 
+// Funciones flecha con retorno implícito para cálculo real y validación
+const calcularPuntosSesion = (horas, multiplicador) => horas * multiplicador;
 const validarHoras = (horas) => !isNaN(horas) && horas > 0;
 
-const nombreUsuario = prompt("¡Hola! ¿Cuál es tu nombre?");
+// 2. FUNCIONES DE ENTRADA Y SALIDA (I/O)
+function pedirDatos() {
+  let tecnologia = prompt("¿Qué tecnología estudiaste? (Escribe HTML, CSS, JavaScript, React o 'ESC' para salir):");
+
+  if (tecnologia === null || tecnologia.trim().toUpperCase() === "ESC" || tecnologia.trim() === "") {
+    return null;
+  }
+
+  let entradaHoras = prompt("¿Cuántas horas le dedicaste a " + tecnologia + "?");
+  let horas = parseFloat(entradaHoras);
+
+  return { tecnologia: tecnologia.trim(), horas };
+}
+
+function mostrarResumen(nombre, sesiones, totalHoras, totalPuntos) {
+  console.log("==========================================");
+  console.log(`RESUMEN FINAL DE LA JORNADA (${nombre.toUpperCase()}):`);
+  console.log(`- Total de sesiones: ${sesiones}`);
+  console.log(`- Total de horas acumuladas: ${totalHoras} hrs`);
+  console.log(`- Total de Puntos XP obtenidos: ${totalPuntos} pts`);
+  console.log("==========================================");
+
+  if (sesiones > 0) {
+    alert(`Resumen final de ${nombre}:\n- Sesiones completadas: ${sesiones}\n- Horas totales: ${totalHoras} hrs\n- Puntos XP totales: ${totalPuntos} pts.\n¡Revisa la consola (F12) para ver el detalle completo!`);
+  } else {
+    alert(" Saliendo del simulador sin registrar sesiones. ¡Hasta la próxima!");
+  }
+}
+
+// 3. FLUJO PRINCIPAL DEL SIMULADOR
+const entradaNombre = prompt("¡Hola! ¿Cuál es tu nombre?");
+const nombreUsuario = entradaNombre && entradaNombre.trim() !== "" ? entradaNombre.trim() : "Estudiante";
 alert("Bienvenido/a al simulador de control de estudio, " + nombreUsuario + ".");
 
 let totalHorasEstudio = 0;
@@ -44,15 +75,14 @@ let continuar = true;
 console.log("=== INICIO DE SESIÓN DE ESTUDIO: " + nombreUsuario.toUpperCase() + " ===");
 
 while (continuar) {
-  let tecnologia = prompt("¿Qué tecnología estudiaste? (Escribe HTML, CSS, JavaScript, React o 'ESC' para salir):");
+  const datosSesion = pedirDatos();
 
-  if (tecnologia === null || tecnologia.toUpperCase() === "ESC") {
+  if (datosSesion === null) {
     break;
   }
-  let multiplicadorActual = calcularMultiplicador(tecnologia);
 
-  let entradaHoras = prompt("¿Cuántas horas le dedicaste a " + tecnologia + "?");
-  let horas = parseFloat(entradaHoras);
+  const { tecnologia, horas } = datosSesion;
+  let multiplicadorActual = calcularMultiplicador(tecnologia);
 
   if (!validarHoras(horas)) {
     alert(" Valor inválido. No se registraron horas para esta sesión.");
@@ -69,15 +99,4 @@ while (continuar) {
   }
 }
 
-console.log("==========================================");
-console.log("RESUMEN FINAL DE LA JORNADA:");
-console.log(`- Total de sesiones: ${sesionesRegistradas}`);
-console.log(`- Total de horas acumuladas: ${totalHorasEstudio} hrs`);
-console.log(`- Total de Puntos XP obtenidos: ${totalPuntosXP} pts`);
-console.log("==========================================");
-
-if (sesionesRegistradas > 0) {
-  alert(`Resumen final:\n- Sesiones completadas: ${sesionesRegistradas}\n- Horas totales: ${totalHorasEstudio} hrs\n- Puntos XP totales: ${totalPuntosXP} pts.\n¡Revisa la consola (F12) para ver el detalle completo!`);
-} else {
-  alert(" Saliendo del simulador sin registrar sesiones. ¡Hasta la próxima!");
-}
+mostrarResumen(nombreUsuario, sesionesRegistradas, totalHorasEstudio, totalPuntosXP);
