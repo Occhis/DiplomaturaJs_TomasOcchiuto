@@ -1,237 +1,275 @@
-// ==========================================
-// PRE-ENTREGA 4: USO E INTERACCIÓN CON ARRAYS
-// Simulador de Control y Ruta de Estudio
-// ==========================================
+class Tecnologia {
+    constructor(id, nombre, categoria, multiplicadorXP) {
+        this.id = id;
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.multiplicadorXP = multiplicadorXP;
+        this.horasAcumuladas = 0;
+        this.puntosXP = 0;
+        this.dominada = false;
+    }
 
-// 1. PREPARACIÓN DE LA COLECCIÓN (Mínimo 5 elementos iniciales)
-const tecnologiasEstudio = ["HTML", "CSS", "JavaScript", "React", "Git"];
+    registrarEstudio(horas) {
+        if (isNaN(horas) || horas <= 0) {
+            return 0;
+        }
+        const xpGanada = horas * this.multiplicadorXP;
+        this.horasAcumuladas += horas;
+        this.puntosXP += xpGanada;
+
+        if (this.horasAcumuladas >= 10) {
+            this.dominada = true;
+        }
+
+        return xpGanada;
+    }
+
+  
+    obtenerResumen() {
+        const estado = this.dominada ? "Dominada ✅" : "En progreso";
+        return `[#${this.id}] ${this.nombre} (${this.categoria}) | x${this.multiplicadorXP} XP | ${this.horasAcumuladas}h | ${this.puntosXP} pts | ${estado}`;
+    }
+}
+
+
+const techHtml = new Tecnologia(1, "HTML", "Frontend", 1);
+const techCss = new Tecnologia(2, "CSS", "Frontend", 1);
+const techJs = new Tecnologia(3, "JavaScript", "Lenguaje", 2);
+const techReact = new Tecnologia(4, "React", "Framework", 3);
+const techGit = new Tecnologia(5, "Git", "Herramientas", 2);
+
+const tecnologiasEstudio = [techHtml, techCss, techJs, techReact, techGit];
 const historialSesiones = [];
 
-// 2. FUNCIONES DE REPORTE Y MANIPULACIÓN DE ARRAYS
-function mostrarTecnologias(listaTecnologias) {
-  console.log("--- Catálogo actual de tecnologías de estudio ---");
-  for (const tecnologia of listaTecnologias) {
-    console.log(`Tecnología: ${tecnologia}`);
-  }
-  console.log("-------------------------------------------------");
-}
-
-function gestionarColeccionInicial(lista) {
-  console.log("=== FASE 1: PREPARACIÓN Y MANIPULACIÓN DINÁMICA DEL ARRAY ===");
-  mostrarTecnologias(lista);
-
-  lista.push("Testing");
-  console.log("-> Se agregó 'Testing' al final con push().");
-
-  lista.unshift("Lógica");
-  console.log("-> Se agregó 'Lógica' al inicio con unshift().");
-
-  mostrarTecnologias(lista);
-
-  const elementoEliminado = lista.pop();
-  const mensajeEliminado = `Se ha eliminado el elemento: ${elementoEliminado}`;
-  console.log(mensajeEliminado);
-  alert(mensajeEliminado);
-}
-
-function buscarTecnologia(lista) {
-  console.log("=== FASE 2: BÚSQUEDA Y VALIDACIÓN EN EL ARRAY ===");
-  const entradaBusqueda = prompt(
-    `Tecnologías actuales: ${lista.join(", ")}\n\nIngresa el nombre de una tecnología para buscar en tu ruta (ej: JavaScript):`
-  );
-
-  if (entradaBusqueda === null || entradaBusqueda.trim() === "") {
-    console.log("Búsqueda omitida por el usuario.");
-    return;
-  }
-
-  const termino = entradaBusqueda.trim();
+const estadoUsuario = {
+    nombre: "Estudiante",
+    sesiones: 0
+};
 
 
-  let elementoNormalizado = termino;
-  for (const item of lista) {
-    if (item.toLowerCase() === termino.toLowerCase()) {
-      elementoNormalizado = item;
-      break;
-    }
-  }
+function verificarInstanciasEnConsola() {
+    console.log("=== VERIFICACIÓN DE INSTANCIAS Y MÉTODOS ===");
+    console.log("Instancias iniciales:");
+    console.log(techJs.obtenerResumen());
+    console.log(techReact.obtenerResumen());
+    console.log(techGit.obtenerResumen());
 
-
-  if (lista.includes(elementoNormalizado)) {
-    const posicion = lista.indexOf(elementoNormalizado);
-    const msgExito = `✅ La tecnología "${elementoNormalizado}" existe en la colección y se encuentra en el índice ${posicion}.`;
-    console.log(msgExito);
-    alert(msgExito);
-  } else {
-    const msgNoEncontrado = `⚠️ La tecnología "${termino}" no se encuentra en la lista (indexOf: ${lista.indexOf(termino)}).`;
-    console.log(msgNoEncontrado);
-    alert(msgNoEncontrado);
-  }
-}
-
-function actualizarTecnologiaPorIndice(lista) {
-  console.log("=== FASE 3: ACTUALIZACIÓN POR ÍNDICE CON SPLICE ===");
-  let indiceActualizar = lista.indexOf("Git");
-  if (indiceActualizar === -1) {
-    indiceActualizar = lista.length - 1;
-  }
-
-  const valorAnterior = lista[indiceActualizar];
-  const nuevoValor = prompt(
-    `Vamos a actualizar el elemento en el índice ${indiceActualizar} (actualmente "${valorAnterior}").\nIngresa la nueva tecnología para esa posición (deja vacío para usar "Node.js"):`
-  );
-
-  const reemplazo = nuevoValor && nuevoValor.trim() !== "" ? nuevoValor.trim() : "Node.js";
-
-
-  lista.splice(indiceActualizar, 1, reemplazo);
-  console.log(`-> Índice ${indiceActualizar} actualizado con splice(): "${valorAnterior}" fue reemplazado por "${lista[indiceActualizar]}".`);
-
-  mostrarTecnologias(lista);
+   
+    const techPrueba = new Tecnologia(99, "TypeScript", "Lenguaje", 2);
+    console.log("\nAntes de registrar estudio:", techPrueba.obtenerResumen());
+    techPrueba.registrarEstudio(12);
+    console.log("Después de registrar 12h:", techPrueba.obtenerResumen());
+    console.log("============================================\n");
 }
 
 
-function calcularMultiplicador(tecnologia) {
-  let tech = tecnologia.toLowerCase().trim();
-  let multiplicador = 1;
-
-  switch (tech) {
-    case "logica":
-    case "lógica":
-    case "html":
-    case "css":
-      multiplicador = 1;
-      console.log(" Tecnología base seleccionada: " + tech.toUpperCase());
-      break;
-    case "javascript":
-    case "git":
-    case "node.js":
-      multiplicador = 2;
-      console.log(" Tecnología intermedia/lógica seleccionada: " + tech.toUpperCase());
-      break;
-    case "react":
-      multiplicador = 3;
-      console.log(" Tecnología avanzada seleccionada: REACT");
-      break;
-    default:
-      alert(" Tecnología personalizada. Se calculará con peso estándar (x1).");
-      multiplicador = 1;
-      break;
-  }
-  return multiplicador;
+function buscarTecnologiaPorNombre(lista, termino) {
+    const limpio = termino.trim().toLowerCase();
+    return lista.find((tech) => tech.nombre.toLowerCase() === limpio) || null;
 }
 
+function obtenerSiguienteId(lista) {
+    if (lista.length === 0) return 1;
+    const maxId = Math.max(...lista.map((tech) => tech.id));
+    return maxId + 1;
+}
 
-const calcularPuntosSesion = (horas, multiplicador) => horas * multiplicador;
 const validarHoras = (horas) => !isNaN(horas) && horas > 0;
 
-
-function pedirDatos(listaDisponible) {
-  let tecnologia = prompt(
-    `Ruta disponible: ${listaDisponible.join(" | ")}\n\n¿Qué tecnología estudiaste hoy? (o escribe 'ESC' para finalizar y ver el resumen):`
-  );
-
-  if (tecnologia === null || tecnologia.trim().toUpperCase() === "ESC" || tecnologia.trim() === "") {
-    return null;
-  }
-
-  let entradaHoras = prompt("¿Cuántas horas le dedicaste a " + tecnologia.trim() + "?");
-  let horas = parseFloat(entradaHoras);
-
-  return { tecnologia: tecnologia.trim(), horas };
+function mostrarFeedback(mensaje) {
+    const cajaFeedback = document.getElementById("mensaje-feedback");
+    cajaFeedback.textContent = mensaje;
 }
 
-function mostrarResumen(nombre, sesiones, totalHoras, totalPuntos, listaTecnologias, historial) {
-  console.log("==========================================");
-  console.log(`RESUMEN FINAL DE LA JORNADA (${nombre.toUpperCase()}):`);
-  console.log(`- Total de sesiones: ${sesiones}`);
-  console.log(`- Total de horas acumuladas: ${totalHoras} hrs`);
-  console.log(`- Total de Puntos XP obtenidos: ${totalPuntos} pts`);
+function renderizarTecnologias() {
+    const ulTecnologias = document.getElementById("lista-tecnologias");
+    const selectIndice = document.getElementById("select-indice");
 
-  if (historial.length > 0) {
-    console.log("--- Detalle de sesiones registradas (for...of) ---");
-    for (const registro of historial) {
-      console.log(`Sesión: ${registro}`);
+    ulTecnologias.innerHTML = "";
+    selectIndice.innerHTML = "";
+
+    tecnologiasEstudio.forEach((tech, indice) => {
+        const li = document.createElement("li");
+        const marcaDominada = tech.dominada ? " ⭐" : "";
+        li.textContent = `[${indice}] ${tech.nombre} (${tech.horasAcumuladas}h | ${tech.puntosXP} XP)${marcaDominada}`;
+        ulTecnologias.appendChild(li);
+
+        const option = document.createElement("option");
+        option.value = indice;
+        option.textContent = `Índice ${indice}: ${tech.nombre} (${tech.categoria})`;
+        selectIndice.appendChild(option);
+    });
+}
+
+function renderizarEstadisticas() {
+    let totalHoras = 0;
+    let totalXP = 0;
+
+    for (const tech of tecnologiasEstudio) {
+        totalHoras += tech.horasAcumuladas;
+        totalXP += tech.puntosXP;
     }
-  }
 
-  mostrarTecnologias(listaTecnologias);
-  console.log("==========================================");
-
-  if (sesiones > 0) {
-    alert(
-      `Resumen final de ${nombre}:\n- Sesiones completadas: ${sesiones}\n- Horas totales: ${totalHoras} hrs\n- Puntos XP totales: ${totalPuntos} pts.\n¡Revisa la consola (F12) para ver el reporte completo de arrays y sesiones!`
-    );
-  } else {
-    alert(" Saliendo del simulador sin registrar sesiones. ¡Revisa la consola (F12) para ver el reporte de tecnologías!");
-  }
+    document.getElementById("stat-sesiones").textContent = estadoUsuario.sesiones;
+    document.getElementById("stat-horas").textContent = `${totalHoras} hrs`;
+    document.getElementById("stat-xp").textContent = `${totalXP} pts`;
 }
 
+function renderizarHistorial() {
+    const ulHistorial = document.getElementById("lista-historial");
+    ulHistorial.innerHTML = "";
 
-const entradaNombre = prompt("¡Hola! ¿Cuál es tu nombre?");
-const nombreUsuario = entradaNombre && entradaNombre.trim() !== "" ? entradaNombre.trim() : "Estudiante";
-alert("Bienvenido/a al simulador de control de estudio, " + nombreUsuario + ".");
-
-console.log("=== INICIO DE SESIÓN DE ESTUDIO: " + nombreUsuario.toUpperCase() + " ===");
-
-
-gestionarColeccionInicial(tecnologiasEstudio);
-buscarTecnologia(tecnologiasEstudio);
-actualizarTecnologiaPorIndice(tecnologiasEstudio);
-
-let totalHorasEstudio = 0;
-let sesionesRegistradas = 0;
-let totalPuntosXP = 0;
-let continuar = true;
-
-console.log("=== FASE 4: REGISTRO DE SESIONES DE ESTUDIO ===");
-
-while (continuar) {
-  const datosSesion = pedirDatos(tecnologiasEstudio);
-
-  if (datosSesion === null) {
-    break;
-  }
-
-  const { tecnologia, horas } = datosSesion;
-
-  let existeEnLista = false;
-  for (const item of tecnologiasEstudio) {
-    if (item.toLowerCase() === tecnologia.toLowerCase()) {
-      existeEnLista = true;
-      break;
+    for (const registro of historialSesiones) {
+        const li = document.createElement("li");
+        li.textContent = registro;
+        ulHistorial.appendChild(li);
     }
-  }
-  if (!existeEnLista) {
-    tecnologiasEstudio.push(tecnologia);
-    console.log(`-> Nueva tecnología "${tecnologia}" agregada dinámicamente al array con push().`);
-  }
-
-  let multiplicadorActual = calcularMultiplicador(tecnologia);
-
-  if (!validarHoras(horas)) {
-    alert(" Valor inválido. No se registraron horas para esta sesión.");
-    console.log(" Intento fallido de registro por valor no numérico o negativo.");
-  } else {
-    let puntosSesion = calcularPuntosSesion(horas, multiplicadorActual);
-
-    totalHorasEstudio += horas;
-    totalPuntosXP += puntosSesion;
-    sesionesRegistradas++;
-
-    const descripcionSesion = `#${sesionesRegistradas} - ${tecnologia.toUpperCase()} (${horas} hrs | ${puntosSesion} XP)`;
-    historialSesiones.push(descripcionSesion);
-
-    alert(`✅ ¡Sesión registrada! Sumaste ${puntosSesion} puntos de experiencia técnica.`);
-    console.log(`> Sesión registrada: ${descripcionSesion}`);
-  }
 }
 
-mostrarResumen(
-  nombreUsuario,
-  sesionesRegistradas,
-  totalHorasEstudio,
-  totalPuntosXP,
-  tecnologiasEstudio,
-  historialSesiones
-);
+function actualizarNombreUsuario() {
+    const inputNombre = document.getElementById("input-nombre");
+    const nombreLimpio = inputNombre.value.trim();
+
+    if (nombreLimpio !== "") {
+        estadoUsuario.nombre = nombreLimpio;
+        document.getElementById("saludo-usuario").textContent = `Hola, ${estadoUsuario.nombre}`;
+        inputNombre.value = "";
+    }
+}
+
+function agregarTecnologia(alInicio = false) {
+    const inputTech = document.getElementById("input-tech");
+    const nombre = inputTech.value.trim();
+
+    if (nombre === "") {
+        mostrarFeedback("⚠️ Escribe el nombre de una tecnología para agregar.");
+        return;
+    }
+
+    if (buscarTecnologiaPorNombre(tecnologiasEstudio, nombre)) {
+        mostrarFeedback(`⚠️ "${nombre}" ya existe en tu catálogo.`);
+        return;
+    }
+
+    const nuevoId = obtenerSiguienteId(tecnologiasEstudio);
+    const nuevaInstancia = new Tecnologia(nuevoId, nombre, "Personalizada", 2);
+
+    if (alInicio) {
+        tecnologiasEstudio.unshift(nuevaInstancia);
+        mostrarFeedback(`✅ Se instanció y agregó "${nuevaInstancia.nombre}" al inicio.`);
+    } else {
+        tecnologiasEstudio.push(nuevaInstancia);
+        mostrarFeedback(`✅ Se instanció y agregó "${nuevaInstancia.nombre}" al final.`);
+    }
+
+    console.log("Nueva instancia creada:", nuevaInstancia.obtenerResumen());
+    inputTech.value = "";
+    renderizarTecnologias();
+}
+
+function eliminarUltimaTecnologia() {
+    if (tecnologiasEstudio.length === 0) {
+        mostrarFeedback("⚠️ No hay elementos para eliminar.");
+        return;
+    }
+
+    const eliminada = tecnologiasEstudio.pop();
+    mostrarFeedback(`🗑️ Se eliminó el objeto "${eliminada.nombre}" (${eliminada.puntosXP} XP).`);
+    renderizarTecnologias();
+    renderizarEstadisticas();
+}
+
+function buscarTecnologiaDOM() {
+    const inputBuscar = document.getElementById("input-buscar");
+    const termino = inputBuscar.value.trim();
+
+    if (termino === "") {
+        mostrarFeedback("⚠️ Ingresa un término de búsqueda.");
+        return;
+    }
+
+    const encontrada = buscarTecnologiaPorNombre(tecnologiasEstudio, termino);
+
+    if (encontrada) {
+        const posicion = tecnologiasEstudio.indexOf(encontrada);
+        mostrarFeedback(`✅ Índice ${posicion}: ${encontrada.obtenerResumen()}`);
+    } else {
+        mostrarFeedback(`❌ "${termino}" no se encuentra en la colección.`);
+    }
+}
+
+function reemplazarTecnologiaDOM() {
+    const selectIndice = document.getElementById("select-indice");
+    const inputReemplazo = document.getElementById("input-reemplazo");
+
+    const indice = parseInt(selectIndice.value);
+    const nuevoNombre = inputReemplazo.value.trim() || "Node.js";
+
+    if (isNaN(indice) || tecnologiasEstudio.length === 0) return;
+
+    const anterior = tecnologiasEstudio[indice];
+    const nuevaInstancia = new Tecnologia(anterior.id, nuevoNombre, anterior.categoria, anterior.multiplicadorXP);
+
+    tecnologiasEstudio.splice(indice, 1, nuevaInstancia);
+    mostrarFeedback(`🔄 Índice ${indice} reemplazado: "${anterior.nombre}" → "${nuevaInstancia.nombre}".`);
+
+    inputReemplazo.value = "";
+    renderizarTecnologias();
+    renderizarEstadisticas();
+}
+
+function manejarRegistroSesion(evento) {
+    evento.preventDefault();
+
+    const inputTech = document.getElementById("input-sesion-tech");
+    const inputHoras = document.getElementById("input-sesion-horas");
+
+    const nombreIngresado = inputTech.value.trim();
+    const horas = parseFloat(inputHoras.value);
+
+    if (nombreIngresado === "" || !validarHoras(horas)) {
+        mostrarFeedback("⚠️ Ingresa una tecnología válida y horas mayores a 0.");
+        return;
+    }
+
+
+    let techObjeto = buscarTecnologiaPorNombre(tecnologiasEstudio, nombreIngresado);
+    if (!techObjeto) {
+        const nuevoId = obtenerSiguienteId(tecnologiasEstudio);
+        techObjeto = new Tecnologia(nuevoId, nombreIngresado, "Personalizada", 2);
+        tecnologiasEstudio.push(techObjeto);
+    }
+
+
+    const xpGanada = techObjeto.registrarEstudio(horas);
+    estadoUsuario.sesiones++;
+
+    const descripcion = `#${estadoUsuario.sesiones} - ${techObjeto.nombre.toUpperCase()} (${horas} hrs | +${xpGanada} XP | Acumulado: ${techObjeto.horasAcumuladas}h)`;
+    historialSesiones.push(descripcion);
+
+    console.log("Estado actualizado del objeto:", techObjeto.obtenerResumen());
+    mostrarFeedback(`🚀 ¡Sesión registrada en ${techObjeto.nombre}! Sumaste ${xpGanada} XP.`);
+
+    renderizarTecnologias();
+    renderizarEstadisticas();
+    renderizarHistorial();
+
+    inputTech.value = "";
+    inputHoras.value = "";
+}
+
+function iniciarSimulador() {
+    verificarInstanciasEnConsola();
+    renderizarTecnologias();
+    renderizarEstadisticas();
+
+    document.getElementById("btn-guardar-nombre").addEventListener("click", actualizarNombreUsuario);
+    document.getElementById("btn-agregar-final").addEventListener("click", () => agregarTecnologia(false));
+    document.getElementById("btn-agregar-inicio").addEventListener("click", () => agregarTecnologia(true));
+    document.getElementById("btn-eliminar-ultima").addEventListener("click", eliminarUltimaTecnologia);
+    document.getElementById("btn-buscar").addEventListener("click", buscarTecnologiaDOM);
+    document.getElementById("btn-actualizar").addEventListener("click", reemplazarTecnologiaDOM);
+    document.getElementById("form-sesion").addEventListener("submit", manejarRegistroSesion);
+}
+
+iniciarSimulador();

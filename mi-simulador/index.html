@@ -3,13 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-Entrega 4 - Simulador Interactivo con Arrays</title>
+    <title>Pre-Entrega 5 - Simulador con Clases y Objetos</title>
+    <link rel="stylesheet" href="./styles/styles.css">
     <script src="./script/main.js" defer></script>
 </head>
 <body>
-    <main>
-        <h1>Simulador Interactivo - Pre-Entrega 4: Uso e interacción con Arrays</h1>
-        <p>Abre la consola del navegador (F12) para ver la gestión de arrays, funciones y control de flujo del simulador.</p>
+    <header class="header">
+        <h1>Simulador Interactivo - Pre-Entrega 5: Clases y Objetos</h1>
+        <div class="perfil-usuario">
+            <input type="text" id="input-nombre" placeholder="Tu nombre...">
+            <button id="btn-guardar-nombre" type="button">Guardar</button>
+            <span id="saludo-usuario">Estudiante</span>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <!-- SECCIÓN 1: GESTIÓN DE TECNOLOGÍAS (OBJETOS) -->
+        <section class="card">
+            <h2>1. Catálogo de Tecnologías</h2>
+            <div id="mensaje-feedback" class="feedback" aria-live="polite"></div>
+
+            <ul id="lista-tecnologias" class="lista-tags"></ul>
+
+            <div class="grupo-controles">
+                <input type="text" id="input-tech" placeholder="Ej: TypeScript, Node.js...">
+                <button id="btn-agregar-final" type="button">Agregar al final (push)</button>
+                <button id="btn-agregar-inicio" type="button">Agregar al inicio (unshift)</button>
+                <button id="btn-eliminar-ultima" type="button" class="btn-secundario">Eliminar última (pop)</button>
+            </div>
+
+            <div class="grupo-controles">
+                <input type="text" id="input-buscar" placeholder="Buscar tecnología...">
+                <button id="btn-buscar" type="button">Buscar</button>
+            </div>
+
+            <div class="grupo-controles">
+                <select id="select-indice"></select>
+                <input type="text" id="input-reemplazo" placeholder="Nuevo nombre (ej: Node.js)">
+                <button id="btn-actualizar" type="button">Reemplazar (splice)</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: REGISTRO DE SESIONES -->
+        <section class="card">
+            <h2>2. Registrar Sesión de Estudio</h2>
+            <form id="form-sesion" class="form-sesion">
+                <input type="text" id="input-sesion-tech" placeholder="Tecnología estudiada" required>
+                <input type="number" id="input-sesion-horas" placeholder="Horas (ej: 1.5)" step="0.5" min="0.5" required>
+                <button type="submit">Registrar Sesión</button>
+            </form>
+
+            <div class="resumen-grid">
+                <div class="stat-box">
+                    <span class="stat-label">Sesiones</span>
+                    <strong id="stat-sesiones">0</strong>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Horas Totales</span>
+                    <strong id="stat-horas">0 hrs</strong>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Puntos XP</span>
+                    <strong id="stat-xp">0 pts</strong>
+                </div>
+            </div>
+
+            <h3>Historial de Sesiones</h3>
+            <ul id="lista-historial" class="lista-historial"></ul>
+        </section>
     </main>
 </body>
 </html>
